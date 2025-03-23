@@ -1,0 +1,828 @@
+//+------------------------------------------------------------------+
+//|                                                      ProjectName |
+//|                                      Copyright 2020, CompanyName |
+//|                                       http://www.companyname.net |
+//+------------------------------------------------------------------+
+
+int day=20;//DAY of expiry
+int month=5;//MONTH on expiry JANUARY IS 1 AND DECEMBER IS 12
+int year=2025;//YEAR
+
+
+//+------------------------------------------------------------------+
+//|                                                   satya_indi.mq5 |
+//|                Copyright 2025, MacTec Inc whatsapp +263782676014 |
+//|                                         mcdonaldgovore@gmail.com |
+//+------------------------------------------------------------------+
+#property copyright "Copyright 2025, MacTec Inc whatsapp +263782676014"
+#property link      "mcdonaldgovore@gmail.com"
+#property version   "1.00"
+#property indicator_chart_window
+//+------------------------------------------------------------------+
+//| Custom indicator initialization function                         |
+//+------------------------------------------------------------------+
+#property indicator_buffers 2
+#property  indicator_plots 2
+
+
+#property  indicator_type1 DRAW_ARROW
+#property  indicator_label1 "BUY ARROW"
+#property  indicator_color1 clrDarkGreen
+#property  indicator_style1 STYLE_SOLID
+#property  indicator_width1 1
+
+#property  indicator_type2 DRAW_ARROW
+#property  indicator_label2 "SELL ARROW"
+#property  indicator_color2 clrRed
+#property  indicator_style2 STYLE_SOLID
+#property  indicator_width2 1
+
+
+enum onoff
+  {
+   OFF=0,
+   ON=1
+  };
+
+//--- input parameters
+input string infor1 = "START DATE SETTINGS ";//info
+input int day_input    =1;  // Day
+input int month_input=1;   // Month(January is 1 ,December is 12)
+input int year_input =2024;   // Year
+
+input string infor2 = "LINES SETTINGS ";//info
+double perc1=0;//Level 1
+input double perc2=0.618;//Level 2
+input double perc3=1.00;//Level 3
+input double perc4=2.00;//Level 4
+ double perc5=3;//Level 5
+ double perc6=4;//Level 6
+ double perc7=6;//Level 7
+ double perc8=7;//Level 8
+ double perc9=8;//Level 9
+input double perc10=9.00;// //Level 10
+input color linecolorabove = clrBlue;//Positive color
+input color linecolorbelow = clrRed;//Negative Color
+input onoff en_alerts = 1;//Alerts
+
+
+
+datetime starttime=0;
+
+
+double buffer_buyarrow[];
+double buffer_sellarrow[];
+
+
+string lineabovename1="";
+string lineabovename2="";
+string lineabovename3="";
+string lineabovename4="";
+string lineabovename5="";
+string lineabovename6="";
+string lineabovename7="";
+string lineabovename8="";
+string lineabovename9="";
+string lineabovename10="";
+
+string linebelowname1="";
+string linebelowname2="";
+string linebelowname3="";
+string linebelowname4="";
+string linebelowname5="";
+string linebelowname6="";
+string linebelowname7="";
+string linebelowname8="";
+string linebelowname9="";
+string linebelowname10="";
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void drawlinesabove(double price, datetime time1, datetime time2, string type)
+  {
+
+   double price1 = price*((100.0+perc1)/100.0);
+   NormalizeDouble(price1, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc1),OBJ_TREND,0,time1,price1, time2,price1);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc1),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc1),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc1),OBJPROP_TOOLTIP,string(price1));
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc1),OBJPROP_STYLE,STYLE_DASH);
+   double price2 = price*((100.0+perc2)/100.0);
+   NormalizeDouble(price2, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc2),OBJ_TREND,0,time1,price2, time2,price2);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc2),OBJPROP_COLOR,linecolorabove);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc2),OBJPROP_TOOLTIP,string(price2));
+
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc2),OBJPROP_RAY_RIGHT,false);
+   double price3 = price*((100.0+perc3)/100.0);
+   NormalizeDouble(price3, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc3),OBJ_TREND,0,time1,price3, time2,price3);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc3),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc3),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc3),OBJPROP_TOOLTIP,string(price3));
+
+   double price4 = price*((100.0+perc4)/100.0);
+   NormalizeDouble(price4, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc4),OBJ_TREND,0,time1,price4, time2,price4);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc4),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc4),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc4),OBJPROP_TOOLTIP,string(price4));
+
+   double price5 = price*((100.0+perc5)/100.0);
+   NormalizeDouble(price5, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc5),OBJ_TREND,0,time1,price5, time2,price5);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc5),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc5),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc5),OBJPROP_TOOLTIP,string(price5));
+
+
+   double price6 =price*((100.0+perc6)/100.0);
+   NormalizeDouble(price6, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc6),OBJ_TREND,0,time1,price6, time2,price6);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc6),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc6),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc6),OBJPROP_TOOLTIP,string(price6));
+
+   double price7 = price*((100.0+perc7)/100.0);
+   NormalizeDouble(price7, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc7),OBJ_TREND,0,time1,price7, time2,price7);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc7),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc7),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc7),OBJPROP_TOOLTIP,string(price7));
+
+   double price8 = price*((100.0+perc8)/100.0);
+   NormalizeDouble(price8, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc8),OBJ_TREND,0,time1,price8, time2,price8);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc8),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc8),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc8),OBJPROP_TOOLTIP,string(price8));
+
+   double price9 = price*((100.0+perc9)/100.0);
+   NormalizeDouble(price9, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc9),OBJ_TREND,0,time1,price9, time2,price9);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc9),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc9),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc9),OBJPROP_TOOLTIP,string(price9));
+
+   double price10 = price*((100.0+perc10)/100.0);
+   NormalizeDouble(price10, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc10),OBJ_TREND,0,time1,price10, time2,price10);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc10),OBJPROP_COLOR,linecolorabove);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc10),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc10),OBJPROP_TOOLTIP,string(price10));
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc10),OBJPROP_STYLE,STYLE_DOT);
+   ChartRedraw(0);
+
+   if(type=="lineabove")
+     {
+
+      lineabovename1=type+string(time1)+"price_percent_"+string(perc1);
+      lineabovename2=type+string(time1)+"price_percent_"+string(perc2);
+      lineabovename3=type+string(time1)+"price_percent_"+string(perc3);
+      lineabovename4=type+string(time1)+"price_percent_"+string(perc4);
+      lineabovename5=type+string(time1)+"price_percent_"+string(perc5);
+      lineabovename6=type+string(time1)+"price_percent_"+string(perc6);
+      lineabovename7=type+string(time1)+"price_percent_"+string(perc7);
+      lineabovename8=type+string(time1)+"price_percent_"+string(perc8);
+      lineabovename9=type+string(time1)+"price_percent_"+string(perc9);
+      lineabovename10=type+string(time1)+"price_percent_"+string(perc10);
+
+
+
+
+      if(ObjectGetInteger(0,show_line_button,OBJPROP_STATE)==true)
+        {
+         ObjectSetInteger(0,lineabovename1,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename2,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename3,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename4,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename5,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename6,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename7,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename8,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename9,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,lineabovename10,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+        }
+
+
+      if(ObjectGetInteger(0,show_line_button,OBJPROP_STATE)==false)
+        {
+         ObjectSetInteger(0,lineabovename1,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename2,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename3,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename4,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename5,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename6,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename7,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename8,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename9,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,lineabovename10,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+        }
+
+     }
+
+
+
+
+  }
+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void drawlinesbelow(double price, datetime time1, datetime time2, string type)
+  {
+
+   double price1 = price*((100.0-perc1)/100.0);
+   NormalizeDouble(price1, _Digits);
+
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc1),OBJ_TREND,0,time1,price1, time2,price1);
+ //  ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc1),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc1),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc1),OBJPROP_TOOLTIP,string(price1));
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc1),OBJPROP_STYLE,STYLE_DASH);
+   double price2 = price*((100.0-perc2)/100.0);
+   NormalizeDouble(price2, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc2),OBJ_TREND,0,time1,price2, time2,price2);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc2),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc2),OBJPROP_TOOLTIP,string(price2));
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc2),OBJPROP_RAY_RIGHT,false);
+
+   double price3 = price*((100.0-perc3)/100.0);
+   NormalizeDouble(price3, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc3),OBJ_TREND,0,time1,price3, time2,price3);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc3),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc3),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc3),OBJPROP_TOOLTIP,string(price3));
+
+   double price4 = price*((100.0-perc4)/100.0);
+   NormalizeDouble(price4, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc4),OBJ_TREND,0,time1,price4, time2,price4);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc4),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc4),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc4),OBJPROP_TOOLTIP,string(price4));
+
+   double price5 = price*((100.0-perc5)/100.0);
+   NormalizeDouble(price5, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc5),OBJ_TREND,0,time1,price5, time2,price5);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc5),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc5),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc5),OBJPROP_TOOLTIP,string(price5));
+
+   double price6 =price*((100.0-perc6)/100.0);
+   NormalizeDouble(price6, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc6),OBJ_TREND,0,time1,price6, time2,price6);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc6),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc6),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc6),OBJPROP_TOOLTIP,string(price6));
+
+   double price7 = price*((100.0-perc7)/100.0);
+   NormalizeDouble(price7, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc7),OBJ_TREND,0,time1,price7, time2,price7);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc7),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc7),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc7),OBJPROP_TOOLTIP,string(price7));
+
+
+   double price8 = price*((100.0-perc8)/100.0);
+   NormalizeDouble(price8, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc8),OBJ_TREND,0,time1,price8, time2,price8);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc8),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc8),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc8),OBJPROP_TOOLTIP,string(price8));
+
+   double price9 = price*((100.0-perc9)/100.0);
+   NormalizeDouble(price9, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc9),OBJ_TREND,0,time1,price9, time2,price9);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc9),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc9),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc9),OBJPROP_TOOLTIP,string(price9));
+
+   double price10 = price*((100.0-perc10)/100.0);
+   NormalizeDouble(price10, _Digits);
+   ObjectCreate(0,type+string(time1)+"price_percent_"+string(perc10),OBJ_TREND,0,time1,price10, time2,price10);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc10),OBJPROP_COLOR,linecolorbelow);
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc10),OBJPROP_RAY_RIGHT,false);
+   ObjectSetString(0,type+string(time1)+"price_percent_"+string(perc10),OBJPROP_TOOLTIP,string(price10));
+   ObjectSetInteger(0,type+string(time1)+"price_percent_"+string(perc10),OBJPROP_STYLE,STYLE_DOT);
+
+   ChartRedraw(0);
+
+
+
+   if(type=="linebelow")
+     {
+      linebelowname1=type+string(time1)+"price_percent_"+string(perc1);
+      linebelowname2=type+string(time1)+"price_percent_"+string(perc2);
+      linebelowname3=type+string(time1)+"price_percent_"+string(perc3);
+      linebelowname4=type+string(time1)+"price_percent_"+string(perc4);
+      linebelowname5=type+string(time1)+"price_percent_"+string(perc5);
+      linebelowname6=type+string(time1)+"price_percent_"+string(perc6);
+      linebelowname7=type+string(time1)+"price_percent_"+string(perc7);
+      linebelowname8=type+string(time1)+"price_percent_"+string(perc8);
+      linebelowname9=type+string(time1)+"price_percent_"+string(perc9);
+      linebelowname10=type+string(time1)+"price_percent_"+string(perc10);
+
+
+
+      if(ObjectGetInteger(0,show_line_button,OBJPROP_STATE)==true)
+        {
+         ObjectSetInteger(0,linebelowname1,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname2,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname3,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname4,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname5,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname6,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname7,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname8,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname9,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+         ObjectSetInteger(0,linebelowname10,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+        }
+
+
+      if(ObjectGetInteger(0,show_line_button,OBJPROP_STATE)==false)
+        {
+         ObjectSetInteger(0,linebelowname1,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname2,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname3,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname4,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname5,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname6,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname7,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname8,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname9,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+         ObjectSetInteger(0,linebelowname10,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+        }
+
+
+      ChartRedraw(0);
+     }
+
+
+  }
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
+double startprice=0;
+double openprice[];
+double buytarget=0;
+double selltarget=0;
+string next_trade = "";
+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+  {
+//---
+
+//Print("run delete");
+
+   ObjectDelete(0,show_line_button);
+   ObjectsDeleteAll(0,"SR LEVEL",OBJ_BUTTON);
+   ObjectsDeleteAll(0,"lineabove",0,OBJ_TREND);
+   ObjectsDeleteAll(0,"linebelow",0,OBJ_TREND);
+
+// ObjectsDeleteAll(0,"dayhigh",0,OBJ_TEXT);
+
+
+   ChartRedraw();
+
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void show_lines()
+  {
+
+
+   int obj_total = ObjectsTotal(0,0,OBJ_TREND);
+//Print("onj toal is ", obj_total);
+   for(int i=0;i<obj_total;i++)
+     {
+      string name = ObjectName(0,i,0,OBJ_TREND);
+
+      if(StringFind(name,"lineabove",0)!=-1|| StringFind(name,"linebelow",0)!=-1)
+        {
+         //Print("valid");
+         ObjectSetInteger(0,name,OBJPROP_TIMEFRAMES,OBJ_ALL_PERIODS);
+        }
+     }
+   ChartRedraw(0);
+  }
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void hide_lines()
+  {
+   int obj_total = ObjectsTotal(0,0,OBJ_TREND);
+//Print("onj toal is ", obj_total);
+   for(int i=0;i<obj_total;i++)
+     {
+      string name = ObjectName(0,i,0,OBJ_TREND);
+
+      if(StringFind(name,"lineabove",0)!=-1|| StringFind(name,"linebelow",0)!=-1)
+        {
+         //Print("valid");
+         ObjectSetInteger(0,name,OBJPROP_TIMEFRAMES,OBJ_NO_PERIODS);
+        }
+     }
+   ChartRedraw(0);
+
+  }
+
+
+string show_line_button = "SR Level";
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void  OnChartEvent(
+   const int       id,       // event ID
+   const long&     lparam,   // long type event parameter
+   const double&   dparam,   // double type event parameter
+   const string&   sparam    // string type event parameter
+)
+  {
+
+   if(id== CHARTEVENT_OBJECT_CLICK)
+     {
+
+      //////////Print("sparam   ", sparam, "  zizagbutton ", zigzagbutton);
+
+
+      if(sparam==show_line_button)
+        {
+         if(ObjectGetInteger(0,sparam,OBJPROP_STATE)==true)
+           {
+            show_lines();
+            ObjectSetString(0,show_line_button,OBJPROP_TEXT,show_line_button+"_ON");
+           }
+         if(ObjectGetInteger(0,sparam,OBJPROP_STATE)==false)
+           {
+            hide_lines();
+            ObjectSetString(0,show_line_button,OBJPROP_TEXT,show_line_button+"_OFF");
+           }
+         ChartRedraw(0);
+        }
+     }
+  }
+
+
+
+
+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int OnInit()
+  {
+//--- indicator buffers mapping
+
+   MqlDateTime currenttime;
+   TimeCurrent(currenttime);
+//////Print("currnttime day " , currenttime.day , " month " , currenttime.mon , " year is " , currenttime.year);
+   if((((year!=-1&&day!=-1&&month!=-1)&& (currenttime.year==year &&
+                                          (currenttime.day>=day||currenttime.mon>month) && currenttime.mon>=month))
+       ||(currenttime.year>year)))
+     {
+
+
+      Alert("THIS VERSION HAS EXPIRED CONATCT abhilashafinancials@gmail.com");
+      return(INIT_FAILED);
+     }
+//---
+
+
+
+
+   ObjectDelete(0,show_line_button);
+   ObjectsDeleteAll(0,show_line_button,0,OBJ_BUTTON);
+   ObjectsDeleteAll(0,"lineabove",0,OBJ_TREND);
+   ObjectsDeleteAll(0,"linebelow",0,OBJ_TREND);
+
+
+
+
+
+
+   int height = int(ChartGetInteger(0,CHART_HEIGHT_IN_PIXELS));
+   ObjectCreate(0,show_line_button,OBJ_BUTTON,0,10,10);
+   ObjectSetString(0,show_line_button,OBJPROP_TEXT,show_line_button+"_ON");
+   ObjectSetInteger(0,show_line_button,OBJPROP_XDISTANCE,40) ;
+   ObjectSetInteger(0,show_line_button,OBJPROP_YDISTANCE,height-50) ;
+   ObjectSetInteger(0,show_line_button,OBJPROP_CORNER,CORNER_LEFT_UPPER);
+   ObjectSetInteger(0,show_line_button,OBJPROP_COLOR,clrWhite);
+   ObjectSetInteger(0,show_line_button,OBJPROP_BGCOLOR,clrDimGray);
+   ObjectSetInteger(0,show_line_button,OBJPROP_STATE,true);
+   ObjectSetInteger(0,show_line_button,OBJPROP_XSIZE,120);
+
+
+
+
+
+// ObjectsDeleteAll(0,"dayhigh",0,OBJ_TEXT);
+   runonce=true;
+
+   ChartRedraw();
+
+   if((day_input==0&&month_input==0&&year_input==0))
+     {
+      ////////Print("in o o o ");
+      starttime = iTime(_Symbol,PERIOD_D1,0);
+     }
+
+   if((day_input==0&&month_input==0&&year_input==0)!=true)
+     {
+      ////////Print("no in 00");
+      MqlDateTime mqltime;
+      mqltime.min=0;
+      mqltime.sec=0;
+      mqltime.hour=0;
+      mqltime.day=day_input;
+      mqltime.mon=month_input;
+      mqltime.year=year_input;
+
+      starttime=  StructToTime(mqltime);
+
+     }
+//Print("start time set is ", starttime);
+//startprice =
+
+   SetIndexBuffer(0,buffer_buyarrow,INDICATOR_DATA);
+   SetIndexBuffer(1,buffer_sellarrow,INDICATOR_DATA);
+
+   PlotIndexSetInteger(0,PLOT_ARROW,233);
+   PlotIndexSetInteger(1,PLOT_ARROW,234);
+//PlotIndexSetInteger(0,PLOT_DRAW_BEGIN,max);
+//PlotIndexSetInteger(1,PLOT_DRAW_BEGIN,maxperiod);
+
+   ArraySetAsSeries(openprice,true);
+
+
+   CopyOpen(_Symbol,PERIOD_D1,starttime,1,openprice);
+   startprice = openprice[0];
+
+//Print("start price is ", startprice);
+
+   return(INIT_SUCCEEDED);
+  }
+//+------------------------------------------------------------------+
+//| Custom indicator iteration function                              |
+//+------------------------------------------------------------------+
+bool runonce=true;
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
+  {
+//---
+
+//Detect a new bar
+
+   static datetime preTime=0,curTime;
+
+   bool IsNewBar=false;
+
+   curTime=iTime(_Symbol,PERIOD_CURRENT,0);
+
+////////////////////////////////Print("current time is  ", curTime, "  prev time is ", preTime, "  newbar is ", newBar);
+
+   if(preTime!=curTime)
+
+     {
+      preTime=curTime;
+      IsNewBar=true;
+     }
+
+////end detect new bar
+
+//Print("ratestotal - prev " , (rates_total-prev_calculated));
+   if((rates_total-prev_calculated)<=1)
+     {
+      if(runonce==true)
+        {
+         //Print("runonce");
+         //////iteratebefore
+
+         //Print("arraysize " , ArraySize(buffer_buyarrow));
+         ArraySetAsSeries(buffer_buyarrow,true);
+         ArraySetAsSeries(buffer_sellarrow,true);
+         //   buffer_buyarrow[i]=EMPTY_VALUE;
+         //   buffer_sellarrow[i]=EMPTY_VALUE;
+         ArrayFill(buffer_buyarrow,0,ArraySize(buffer_buyarrow), EMPTY_VALUE);
+         ArrayFill(buffer_sellarrow,0,ArraySize(buffer_sellarrow), EMPTY_VALUE);
+         ArraySetAsSeries(buffer_buyarrow,false);
+         ArraySetAsSeries(buffer_sellarrow,false);
+
+
+
+         ////end iteration
+
+
+         ////////Print("how many");
+         runonce=false;
+
+         //CopyOpen(_Symbol,PERIOD_D1,starttime,4,openprice);
+         //startprice = openprice[0];
+
+
+         ////////Print("start time set is ", starttime, "  start price ", startprice);
+
+         int  numofbars = Bars(_Symbol,PERIOD_CURRENT,starttime,iTime(_Symbol,PERIOD_CURRENT,0));
+         numofbars = numofbars-1;
+         ////////Print("numofbars ", numofbars, " time at bar is ", iTime(_Symbol,PERIOD_CURRENT,numofbars), " open at bar is ", iOpen(_Symbol,PERIOD_CURRENT,numofbars));
+
+         buytarget = startprice*((100.0+perc2)/100.0);
+
+         selltarget = startprice*((100.0-perc2)/100.0);
+
+
+
+         //
+
+         //7
+         //Print("numoifbars " , numofbars);
+         for(int i=numofbars;i>0;i--)
+           {
+            double close = iClose(_Symbol,PERIOD_CURRENT,i);
+            buytarget = startprice*((100.0+perc2)/100.0);
+
+            selltarget = startprice*((100.0-perc2)/100.0);
+
+            //Print("starprice is ", startprice, "  startdate is ", starttime, " time at bar  ", iTime(_Symbol,PERIOD_CURRENT,i), " close is ", close);
+            if(close>buytarget &&((next_trade=="")||(next_trade=="buy")))
+              {
+               //Print("valid buy ");
+               next_trade="sell";
+               ////draw the lines above
+               datetime time2 = iTime(_Symbol,PERIOD_CURRENT,i);
+               drawlinesabove(startprice,starttime,time2,"lineabove");
+               ArraySetAsSeries(buffer_buyarrow,true);
+               ArraySetAsSeries(buffer_sellarrow,true);
+               buffer_buyarrow[i]=iLow(_Symbol,PERIOD_CURRENT,i);
+               buffer_sellarrow[i]=EMPTY_VALUE;
+
+               ArraySetAsSeries(buffer_buyarrow,false);
+               ArraySetAsSeries(buffer_sellarrow,false);
+
+              }
+            if(close<selltarget&&((next_trade=="")||(next_trade=="sell")))
+              {
+               //Print("valid sell arraysize " , ArraySize(buffer_sellarrow));
+               next_trade="buy";
+               ///draw lines below
+               datetime time2 = iTime(_Symbol,PERIOD_CURRENT,i);
+               drawlinesbelow(startprice,starttime,time2,"linebelow");
+               ArraySetAsSeries(buffer_buyarrow,true);
+               ArraySetAsSeries(buffer_sellarrow,true);
+               buffer_buyarrow[i]=EMPTY_VALUE;
+               buffer_sellarrow[i]=iHigh(_Symbol,PERIOD_CURRENT,i);
+
+               ArraySetAsSeries(buffer_buyarrow,false);
+               ArraySetAsSeries(buffer_sellarrow,false);
+
+              }
+
+            if(next_trade=="sell")
+              {
+               if(iHigh(_Symbol,PERIOD_CURRENT,i)>startprice)
+                 {
+                  startprice=iHigh(_Symbol,PERIOD_CURRENT,i);
+                  starttime=iTime(_Symbol,PERIOD_CURRENT,i);
+                 }
+
+              }
+
+            if(next_trade=="buy")
+              {
+               if(iLow(_Symbol,PERIOD_CURRENT,i)<startprice)
+                 {
+                  startprice=iLow(_Symbol,PERIOD_CURRENT,i);
+                  starttime=iTime(_Symbol,PERIOD_CURRENT,i);
+                 }
+
+              }
+
+
+           }
+         ChartRedraw(0);
+
+        }
+
+
+      ////continue
+      if(IsNewBar==true)
+        {
+         double close = iClose(_Symbol,PERIOD_CURRENT,1);
+         buytarget = startprice*((100.0+perc2)/100.0);
+
+         selltarget = startprice*((100.0-perc2)/100.0);
+
+         //Print(" continue starprice is ", startprice, "  startdate is ", starttime, " time at bar  ", iTime(_Symbol,PERIOD_CURRENT,1), " close is ", close);
+         if(close>buytarget &&((next_trade=="")||(next_trade=="buy")))
+           {
+            //////////Print("valid buy ");
+            next_trade="sell";
+            ////draw the lines above
+            datetime time2 = iTime(_Symbol,PERIOD_CURRENT,0);
+            drawlinesabove(startprice,starttime,time2,"lineabove");
+            ArraySetAsSeries(buffer_buyarrow,true);
+            ArraySetAsSeries(buffer_sellarrow,true);
+            buffer_buyarrow[1]=iLow(_Symbol,PERIOD_CURRENT,1);
+            buffer_sellarrow[1]=EMPTY_VALUE;
+
+            if(en_alerts==1)
+              {
+               Alert("BUY ARROW ALERT ON ", _Symbol, " AT ", string(iTime(_Symbol,PERIOD_CURRENT,0)));
+              }
+
+
+            ArraySetAsSeries(buffer_buyarrow,false);
+            ArraySetAsSeries(buffer_sellarrow,false);
+
+           }
+         if(close<selltarget&&((next_trade=="")||(next_trade=="sell")))
+           {
+            //////////Print("valid sell arraysize " , ArraySize(buffer_sellarrow));
+            next_trade="buy";
+            ///draw lines below
+            datetime time2 = iTime(_Symbol,PERIOD_CURRENT,0);
+            drawlinesbelow(startprice,starttime,time2,"linebelow");
+            ArraySetAsSeries(buffer_buyarrow,true);
+            ArraySetAsSeries(buffer_sellarrow,true);
+            buffer_buyarrow[1]=EMPTY_VALUE;
+            buffer_sellarrow[1]=iHigh(_Symbol,PERIOD_CURRENT,1);
+
+            ArraySetAsSeries(buffer_buyarrow,false);
+            ArraySetAsSeries(buffer_sellarrow,false);
+
+            if(en_alerts==1)
+              {
+               Alert("SELL ARROW ALERT ON ", _Symbol, " AT ", string(iTime(_Symbol,PERIOD_CURRENT,0)));
+
+              }
+
+           }
+
+         if(next_trade=="sell")
+           {
+            if(iHigh(_Symbol,PERIOD_CURRENT,1)>startprice)
+              {
+               startprice=iHigh(_Symbol,PERIOD_CURRENT,1);
+               starttime=iTime(_Symbol,PERIOD_CURRENT,1);
+              }
+
+           }
+
+         if(next_trade=="buy")
+           {
+            if(iLow(_Symbol,PERIOD_CURRENT,1)<startprice)
+              {
+               startprice=iLow(_Symbol,PERIOD_CURRENT,1);
+               starttime=iTime(_Symbol,PERIOD_CURRENT,1);
+              }
+
+           }
+
+
+        }
+      ChartRedraw(0);
+
+
+
+
+     }
+
+
+
+//--- return value of prev_calculated for next call
+   return(rates_total);
+  }
+//+------------------------------------------------------------------+
